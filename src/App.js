@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from "react";
+import { Canvas } from "react-three-fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function Model(props) {
+  const { scene } = useGLTF("/dice.glb");
+  return <primitive object={scene} />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <Canvas pixelRatio={[1, 2]} camera={{ position: [-10, 15, 50], fov: 50 }}>
+      <ambientLight intensity={10} />
+      <Suspense fallback={null}>
+        <Model />
+      </Suspense>
+      <OrbitControls />
+    </Canvas>
+  );
+}
