@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useRef } from "react";
 import { Canvas, extend } from "react-three-fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Text } from "troika-three-text";
@@ -29,22 +29,30 @@ function Model2(props) {
 }
 
 function Model3(props) {
-  const { scene } = useGLTF("/IriDonut.glb");
-  scene.position.x = 0;
-  scene.position.z = -0.1;
-  scene.size = 10;
-  scene.height = 20;
-  return <primitive object={scene} />;
+  const group = useRef()
+  const { nodes, materials } = useGLTF('/IriDonut.glb')
+  return (
+    <group ref={group} {...props} dispose={null}>
+      <mesh geometry={nodes.Donut.geometry} material={materials['Material.003']} position={[0, 0.05, 0]}>
+        <mesh
+          geometry={nodes.Icing.geometry}
+          material={materials['Material.003']}
+          position={[-0.0068, 0.041, -0.001]}
+          scale={[0.98,0.98,0.98]}
+        />
+      </mesh>
+    </group>
+  )
 }
 
 function DLight({ brightness, color }) {
   return (
     <directionalLight
       width={3}
-      height={30000}
+      height={3}
       color={color}
       intensity={brightness}
-      position={[-200, 100, 500]}
+      position={[-0.2, 0.1, 0.1]}
       lookAt={[0, 0, 0]}
       penumbra={1}
       castShadow
@@ -109,8 +117,8 @@ function Home() {
 
   return (
     <Canvas pixelRatio={[1, 2]} camera={{ position: [-10, 15, 50], fov: 5 }} onCreated={state => state.gl.setClearColor("#EFB8F3")}>
-      <DLight brightness={2} color={"#ffffff"} />
-      <ELight brightness={2} color={"#ffffff"} />
+      <DLight brightness={2} color={"#ff0000"} />
+      <ELight brightness={1} color={"#0021aa"} />
       <Name x={-0.4} y={0.14} z={-0.4} text={"Tasty Donut"} />
       <Name x={0.25} y={0} z={-0.1} text={"Weird Donut"} />
       <Name x={-0.1} y={-0.05} z={0.15} text={"Blueberry? Donut"} />
@@ -118,11 +126,12 @@ function Home() {
         <Model />
         <Model2 />
         <Model3 />
+        
       </Suspense>
       <OrbitControls 
-        minPolarAngle={0.8}
-        maxPolarAngle={1.2}
-        minDistance={10}
+        minPolarAngle={0}
+        maxPolarAngle={1.6}
+        minDistance={1}
         maxDistance={25}
         panSpeed={0.03}
       />
