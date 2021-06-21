@@ -3,6 +3,7 @@ import { Canvas, extend } from "react-three-fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Text } from "troika-three-text";
 import * as THREE from "three"
+import SprinkledDonut from "./SprinkledDonut";
 
 import {
   BrowserRouter as Router,
@@ -33,7 +34,8 @@ function Model3(props) {
   const { nodes, materials } = useGLTF('/IriDonut.glb')
   return (
     <group ref={group} {...props} dispose={null}>
-      <mesh geometry={nodes.Donut.geometry} material={materials['Material.003']} position={[0, 0.05, 0]}>
+      <mesh geometry={nodes.Donut.geometry} material={materials['Material.003']} 
+      position={[-0.1, -0.14, 0.15]}>
         <mesh
           geometry={nodes.Icing.geometry}
           material={materials['Material.003']}
@@ -90,6 +92,19 @@ function Name({x, y, z, text}) {
   );
 }
 
+function Name2({x, y, z, text}) {
+  return (
+    <text
+      position-x={x}
+      position-y={y}
+      position-z={z}
+      fontSize={0.04}
+      text={text}
+      anchorX={"center"}
+    />
+  );
+}
+
 
 export default function App() {
   return (
@@ -113,13 +128,12 @@ export default function App() {
 
 function Home() {
   const color1 = new THREE.Color( 0xff0000 );
-
-
   return (
-    <Canvas pixelRatio={[1, 2]} camera={{ position: [-10, 15, 50], fov: 5 }} onCreated={state => state.gl.setClearColor("#EFB8F3")}>
-      <DLight brightness={2} color={"#ff0000"} />
-      <ELight brightness={1} color={"#0021aa"} />
-      <Name x={-0.4} y={0.14} z={-0.4} text={"Tasty Donut"} />
+    <Canvas pixelRatio={[1, 1]} camera={{ position: [-10, 15, 50], fov: 5 }} onCreated={state => state.gl.setClearColor("#EFB8F3")}>
+      <ambientLight intensity={0.5} />
+      <DLight brightness={2} color={"#ffffff"} />
+      <ELight brightness={1} color={"#ffffff"} />
+      <Name2 x={-0.4} y={0.14} z={-0.4} text={"Tasty Donut"} />
       <Name x={0.25} y={0} z={-0.1} text={"Weird Donut"} />
       <Name x={-0.1} y={-0.05} z={0.15} text={"Blueberry? Donut"} />
       <Suspense fallback={null}>
@@ -127,6 +141,7 @@ function Home() {
         <Model2 />
         <Model3 />
         
+        <SprinkledDonut />
       </Suspense>
       <OrbitControls 
         minPolarAngle={0}
